@@ -6,6 +6,8 @@
 VERSION ?= 8.1.0
 DATE ?= 2025-03-31
 
+SHELL=/bin/bash -o pipefail
+
 # Path to the code repo.
 VALKEY_ROOT ?= ../valkey
 VALKEY_BLOOM_ROOT ?= ../valkey-bloom
@@ -120,7 +122,7 @@ $(md_commands_dir)/index.md: $(BUILD_DIR)/.commands-per-group.json groups.json u
 
 $(md_commands_dir)/%.md: commands/%.md $(VALKEY_ROOT)/src/commands/%.json $(BUILD_DIR)/.commands-per-group.json \
                          utils/preprocess-markdown.py utils/command_syntax.py
-	utils/preprocess-markdown.py --page-type command \
+	utils/preprocess-markdown.py --page-type command --require-replies \
 	 --commands-per-group-json $(BUILD_DIR)/.commands-per-group.json \
 	 --valkey-root $(VALKEY_ROOT) $< > $@
 
@@ -154,7 +156,7 @@ $(html_commands_dir)/index.html: $(BUILD_DIR)/.commands-per-group.json groups.js
 	 | pandoc -s --to html -o $@ -
 $(html_commands_dir)/%.html: commands/%.md $(VALKEY_ROOT)/src/commands/%.json $(BUILD_DIR)/.commands-per-group.json \
                              utils/preprocess-markdown.py utils/command_syntax.py
-	utils/preprocess-markdown.py --suffix .html --page-type command \
+	utils/preprocess-markdown.py --suffix .html --page-type command --require-replies \
 	 --commands-per-group-json $(BUILD_DIR)/.commands-per-group.json \
 	 --valkey-root $(VALKEY_ROOT) $< \
 	 | pandoc -s --to html -o $@ -
@@ -200,7 +202,7 @@ $(MAN_DIR)/man3/%.3valkey.gz: commands/%.md $(BUILD_DIR)/.commands-per-group.jso
 	$(eval VALKEY_ROOTS := $(VALKEY_ROOT) $(VALKEY_JSON_ROOT)) 
 	$(eval FINAL_ROOT := $(firstword $(foreach root,$(VALKEY_ROOTS),$(if $(wildcard $(root)/src/commands/$*.json),$(root)))))
 	$(if $(FINAL_ROOT),,$(eval FINAL_ROOT := $(lastword $(VALKEY_ROOTS))))
-		utils/preprocess-markdown.py --man --page-type command \
+		utils/preprocess-markdown.py --man --page-type command --require-replies \
 		--version $(VERSION) --date $(DATE) \
 		--commands-per-group-json $(BUILD_DIR)/.commands-per-group.json \
 		--valkey-root $(FINAL_ROOT) $< \
