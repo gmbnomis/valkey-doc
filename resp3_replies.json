@@ -365,6 +365,19 @@
   "COMMAND LIST": [
     "[Array reply](../topics/protocol.md#arrays): a list of command names."
   ],
+  "COMMANDLOG": [],
+  "COMMANDLOG GET": [
+    "[Array reply](../topics/protocol.md#arrays): a list of command log entries per the above format."
+  ],
+  "COMMANDLOG HELP": [
+    "[Array reply](../topics/protocol.md#arrays): a list of sub-commands and their descriptions."
+  ],
+  "COMMANDLOG LEN": [
+    "[Integer reply](../topics/protocol.md#integers): the number of entries in the specified type of command log."
+  ],
+  "COMMANDLOG RESET": [
+    "[Simple string reply](../topics/protocol.md#simple-strings): `OK`."
+  ],
   "CONFIG": [],
   "CONFIG GET": [
     "[Map reply](../topics/protocol.md#maps): a list of configuration parameters matching the provided arguments."
